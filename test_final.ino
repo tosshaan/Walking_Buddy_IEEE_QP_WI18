@@ -8,9 +8,9 @@
  */
 
               //////    CONSTANTS    //////
-          
-const int buffDistance = 8;
-const int threshholdDistance = 100;
+        
+const int buffDistance = 4;
+const int thresholdDistance = 61;
 
 
               //////    INPUTS    //////
@@ -18,8 +18,8 @@ const int threshholdDistance = 100;
 int echoPin[] = {4, 6, 2};
 int trigPin[] = {5, 7, 3};
 int motor = 8;
-int buzzer = 9;
-int tilt = 10;
+int buzzer = 10;
+int tilt = 9;
 
               //////    VARIABLES    //////
           
@@ -35,7 +35,7 @@ bool gettingCloser = false;
 bool pos[] = {false, false, false};   // true when corresponding range sensor detects something within the threshhold distance
  
 long time = 0;         // the last time the output pin was toggled
-long debounce = 3000;  // the debounce time, increase if the output flickers
+long debounce = 1500;  // the debounce time, increase if the output flickers
                        // this is the time difference you want to calculate
 
 
@@ -58,7 +58,7 @@ void setup() {
   pinMode(buzzer, OUTPUT);
   pinMode(tilt, INPUT);
   pinMode(motor, OUTPUT);
-  
+
   digitalWrite(tilt, HIGH);   // turn on the built in pull-up resistor
   digitalWrite(motor, HIGH);  // motor should be off to begin with
 }
@@ -115,10 +115,10 @@ void echo(int index){
  */
 void warningMotor(int i){
   digitalWrite(motor, LOW);
-  Serial.print("(");
-  Serial.print(i + 1);
-  Serial.print(") ");
-  Serial.println("Vibrate...");
+  //Serial.print("(");
+  //Serial.print(i + 1);
+  //Serial.print(") ");
+  //Serial.println("Vibrate...");
   delay(200);
   digitalWrite(motor, HIGH);
 }
@@ -217,19 +217,19 @@ void loop()
     //int index = -1;
     for(int i = 0; i < 3; i++){
       if(pos[i] && prevDistance[i]!=0 && ((cm[i] < prevDistance[i] - buffDistance))){
-        Serial.print("(");
-        Serial.print(i + 1);
-        Serial.print(") ");
-        Serial.println("Something is getting closer");
+        //Serial.print("(");
+        //Serial.print(i + 1);
+        //Serial.print(") ");
+        //Serial.println("Something is getting closer");
         warningMotor(i);
         notCloseAnymore = false;
         //index = i;
       }
       else{
-        Serial.print("(");
-        Serial.print(i + 1);
-        Serial.print(") ");
-        Serial.println("not getting closer anymore");
+        //Serial.print("(");
+        //Serial.print(i + 1);
+        //Serial.print(") ");
+        //Serial.println("not getting closer anymore");
         prevDistance[i] = 0;
         //clearPrev();
         pos[i] = false;
@@ -237,7 +237,7 @@ void loop()
       }
     }
     if(notCloseAnymore){
-      Serial.println("not getting closer anymore");
+      //Serial.println("not getting closer anymore");
       gettingCloser = false;
       clearPrev();
     }
@@ -246,21 +246,21 @@ void loop()
   //check if something is within threshhold distance for the first time
   else if(!gettingCloser){
     for(int i = 0; i < 3; i++){
-      if(cm[i] != 0 && cm[i] < threshholdDistance){
+      if(cm[i] != 0 && cm[i] < thresholdDistance){
         gettingCloser = true;
         pos[i] = true;
         prevDistance[i] = cm[i];
-        Serial.print("(");
-        Serial.print(i + 1);
-        Serial.print(") ");
+        //Serial.print("(");
+        //Serial.print(i + 1);
+        //Serial.print(") ");
       
-        Serial.println("Something is close");
+        //Serial.println("Something is close");
       }
     }
   }
 
-  printPrev();
-  printPos();
+  //printPrev();
+  //printPos();
 
   /*
    * End of Range + Motor
@@ -286,9 +286,9 @@ void loop()
  
      // Now invert the output on the buzzer
      if (switchstate == HIGH)
-       freqState = LOW;
-     else
        freqState = HIGH;
+     else
+       freqState = LOW;
   }
   
   highFreqBuzzer(freqState);
@@ -301,7 +301,7 @@ void loop()
    */
 
   //for testing purposes; also to save battery
-  delay(3500);
+  delay(200);
  
   reset(); 
   
